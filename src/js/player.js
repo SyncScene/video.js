@@ -26,6 +26,7 @@ import ModalDialog from './modal-dialog';
 import Tech from './tech/tech.js';
 import AudioTrackList from './tracks/audio-track-list.js';
 import VideoTrackList from './tracks/video-track-list.js';
+import isFunction from 'lodash-compat/lang/isFunction';
 
 // The following imports are used only to ensure that the corresponding modules
 // are always included in the video.js package. Importing the modules will
@@ -1347,6 +1348,13 @@ class Player extends Component {
    * @method play
    */
   play() {
+    // Allow override if the function is set
+    if (isFunction(this.options_.playOverride)) {
+      if (this.options_.playOverride(this)) {
+        return this;
+      }
+    }
+
     // Only calls the tech's play if we already have a src loaded
     if (this.src() || this.currentSrc()) {
       this.techCall_('play');
@@ -1369,6 +1377,13 @@ class Player extends Component {
    * @method pause
    */
   pause() {
+    // Allow override if the function is set
+    if (isFunction(this.options_.pauseOverride)) {
+      if (this.options_.pauseOverride(this)) {
+        return this;
+      }
+    }
+
     this.techCall_('pause');
     return this;
   }
